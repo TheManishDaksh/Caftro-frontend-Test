@@ -1,5 +1,5 @@
 {
-    "manifest_version": 1,
+    "manifest_version": 3,
     "name": "Webpage Highlighter with AI Summary",
     "version": "1.0",
     "description": "Highlight text, save it locally, and get quick summaries!",
