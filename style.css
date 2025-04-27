@@ -1,0 +1,16 @@
+.save-highlight-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.save-highlight-button:hover {
+    background-color: #45a049;
+}
+
+.highlighted-text {
+    background-color: yellow;
+}
