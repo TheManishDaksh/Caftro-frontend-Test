@@ -1,39 +1,62 @@
 document.addEventListener('DOMContentLoaded', function() {
     loadHighlights();
-
-    document.getElementById('summarizeBtn').addEventListener('click', summarizeHighlights);
-});
-
-function loadHighlights() {
-    chrome.storage.local.get(["highlights"], function(result) {
-        const highlights = result.highlights || [];
-        const list = document.getElementById('highlightList');
-        list.innerHTML = '';
-
-        highlights.forEach((item, index) => {
-            const li = document.createElement('li');
-            li.textContent = `"${item.text}" (${new URL(item.url).hostname})`;
-
-            const delBtn = document.createElement('button');
-            delBtn.textContent = '🗑️';
-            delBtn.style.marginLeft = '10px';
-            delBtn.onclick = function() {
-                deleteHighlight(index);
-            };
-
-            li.appendChild(delBtn);
-            list.appendChild(li);
+  });
+  
+  function loadHighlights() {
+    chrome.storage.local.get(['highlights'], function(result) {
+      const highlightsContainer = document.getElementById('highlights-container');
+      const emptyState = document.getElementById('empty-state');
+      highlightsContainer.innerHTML = '';
+      
+      const highlights = result.highlights || [];
+      
+      if (highlights.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      
+      // Sort highlights by timestamp (newest first)
+      highlights.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      
+      highlights.forEach(function(highlight, index) {
+        const highlightElement = document.createElement('div');
+        highlightElement.className = 'highlight-item';
+        
+        const date = new Date(highlight.timestamp);
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        
+        highlightElement.innerHTML = `
+          "${highlight.text}"
+          
+            ${highlight.title || highlight.url}
+          
+          
+            ${formattedDate}
+            Delete
+          
+        `;
+        
+        highlightsContainer.appendChild(highlightElement);
+      });
+      
+      // Add delete functionality
+      document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          deleteHighlight(index);
         });
+      });
     });
-}
-
-function deleteHighlight(index) {
-    chrome.storage.local.get(["highlights"], function(result) {
-        let highlights = result.highlights || [];
-        highlights.splice(index, 1);
-        chrome.storage.local.set({ highlights: highlights }, function() {
-            loadHighlights();
-        });
+  }
+  
+  function deleteHighlight(index) {
+    chrome.storage.local.get(['highlights'], function(result) {
+      let highlights = result.highlights || [];
+      highlights.splice(index, 1);
+      chrome.storage.local.set({ highlights: highlights }, function() {
+        loadHighlights(); // Reload the list after deletion
+      });
     });
-}
-
+  }

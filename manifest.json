@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Webpage Highlighter with AI Summary",
+    "name": "Webpage Highlighter",
     "version": "1.0",
     "description": "Highlight text, save it locally, and get quick summaries!",
     "permissions": ["storage", "scripting", "activeTab"],
@@ -9,16 +9,11 @@
       {
         "matches": ["<all_urls>"],
         "js": ["main.js"],
-        "css": ["styles.css"]
+        "css": ["style.css"]
       }
     ],
     "action": {
-      "default_popup": "index.html",
-      "default_icon": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-      }
+      "default_popup": "index.html"
     }
   }
   
